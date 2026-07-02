@@ -1,0 +1,13 @@
+# Banco de dados local (cada um que rodar o projeto gera o seu)
+estoque.db
+tests/estoque_teste.db
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Ambiente / IDE
+.vscode/
+.idea/
