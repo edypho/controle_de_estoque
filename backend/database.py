@@ -16,6 +16,17 @@ def criar_conexao():
     return conectar()
 
 
+def coluna_existe(conn, tabela, coluna):
+    cursor = conn.execute(f"PRAGMA table_info({tabela})")
+    colunas = [linha["name"] for linha in cursor.fetchall()]
+    return coluna in colunas
+
+
+def adicionar_coluna_se_nao_existir(conn, tabela, coluna, definicao):
+    if not coluna_existe(conn, tabela, coluna):
+        conn.execute(f"ALTER TABLE {tabela} ADD COLUMN {coluna} {definicao}")
+
+
 def criar_tabelas():
     conn = conectar()
 
@@ -47,9 +58,25 @@ def criar_tabelas():
             quantidade INTEGER NOT NULL,
             observacao TEXT,
             data_hora TEXT NOT NULL,
+            saldo_anterior INTEGER NOT NULL DEFAULT 0,
+            saldo_atual INTEGER NOT NULL DEFAULT 0,
             FOREIGN KEY (produto_id) REFERENCES produtos (id)
         )
     """)
+
+    adicionar_coluna_se_nao_existir(
+        conn,
+        "movimentacoes",
+        "saldo_anterior",
+        "INTEGER NOT NULL DEFAULT 0"
+    )
+
+    adicionar_coluna_se_nao_existir(
+        conn,
+        "movimentacoes",
+        "saldo_atual",
+        "INTEGER NOT NULL DEFAULT 0"
+    )
 
     conn.commit()
     conn.close()
