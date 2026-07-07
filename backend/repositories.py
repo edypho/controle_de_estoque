@@ -25,7 +25,11 @@ class CategoriaRepository:
         conexao = criar_conexao()
 
         linha = conexao.execute(
-            "SELECT * FROM categorias WHERE id = ?",
+            """
+            SELECT *
+            FROM categorias
+            WHERE id = ? AND ativo = 1
+            """,
             (categoria_id,)
         ).fetchone()
 
@@ -44,7 +48,12 @@ class CategoriaRepository:
         conexao = criar_conexao()
 
         linhas = conexao.execute(
-            "SELECT * FROM categorias ORDER BY nome"
+            """
+            SELECT *
+            FROM categorias
+            WHERE ativo = 1
+            ORDER BY nome
+            """
         ).fetchall()
 
         conexao.close()
@@ -94,7 +103,11 @@ class ProdutoRepository:
         conexao = criar_conexao()
 
         linha = conexao.execute(
-            "SELECT * FROM produtos WHERE id = ?",
+            """
+            SELECT *
+            FROM produtos
+            WHERE id = ? AND ativo = 1
+            """,
             (produto_id,)
         ).fetchone()
 
@@ -106,7 +119,12 @@ class ProdutoRepository:
         conexao = criar_conexao()
 
         linhas = conexao.execute(
-            "SELECT * FROM produtos ORDER BY nome"
+            """
+            SELECT *
+            FROM produtos
+            WHERE ativo = 1
+            ORDER BY nome
+            """
         ).fetchall()
 
         conexao.close()
@@ -117,7 +135,11 @@ class ProdutoRepository:
         conexao = criar_conexao()
 
         conexao.execute(
-            "UPDATE produtos SET quantidade = ? WHERE id = ?",
+            """
+            UPDATE produtos
+            SET quantidade = ?
+            WHERE id = ? AND ativo = 1
+            """,
             (nova_quantidade, produto_id)
         )
 
@@ -128,7 +150,11 @@ class ProdutoRepository:
         conexao = criar_conexao()
 
         conexao.execute(
-            "DELETE FROM produtos WHERE id = ?",
+            """
+            UPDATE produtos
+            SET ativo = 0
+            WHERE id = ?
+            """,
             (produto_id,)
         )
 
@@ -202,7 +228,11 @@ class MovimentacaoRepository:
         conexao = criar_conexao()
 
         linhas = conexao.execute(
-            "SELECT * FROM movimentacoes ORDER BY data_hora DESC"
+            """
+            SELECT *
+            FROM movimentacoes
+            ORDER BY data_hora DESC
+            """
         ).fetchall()
 
         conexao.close()
