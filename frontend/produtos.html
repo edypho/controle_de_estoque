@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produtos - Controle de Estoque</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <aside class="sidebar">
+
+            <div class="logo">
+                <i class="fa-solid fa-box"></i>
+                <h2>Estoque</h2>
+            </div>
+
+            <nav>
+                <ul>
+
+                    <li onclick="location.href='index.html'">
+                        <i class="fa-solid fa-chart-line"></i>
+                        Dashboard
+                    </li>
+
+                    <li class="active">
+                        <i class="fa-solid fa-boxes-stacked"></i>
+                        Produtos
+                    </li>
+
+                    <li onclick="location.href='entradas.html'">
+                        <i class="fa-solid fa-arrow-down"></i>
+                        Entradas
+                    </li>
+
+                    <li onclick="location.href='saidas.html'">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        Saídas
+                    </li>
+
+                    <li onclick="location.href='relatorios.html'">
+                        <i class="fa-solid fa-file-lines"></i>
+                        Relatórios
+                    </li>
+
+                </ul>
+            </nav>
+
+        </aside>
+
+        <main class="content">
+
+            <header>
+
+                <h1>Produtos</h1>
+            
+                <div class="actions">
+            
+                    <input
+                        type="text"
+                        id="pesquisa"
+                        placeholder="Pesquisar produto..."
+                    >
+            
+                    <button id="btnNovoProduto">
+                        <i class="fa-solid fa-plus"></i>
+                        Novo Produto
+                    </button>
+            
+                </div>
+            
+            </header>
+
+            <section class="table-area">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Categoria</th>
+                            <th>Quantidade</th>
+                            <th>Preço</th>
+                            <th>Ações</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="produtos">
+
+                    </tbody>
+
+                </table>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <div id="modalProduto" class="modal hidden">
+
+        <div class="modal-content">
+    
+            <h2>Novo Produto</h2>
+    
+            <input type="text" id="nomeProduto" placeholder="Nome do produto">
+    
+            <label for="categoriaProduto">Categoria</label>
+
+            <select id="categoriaProduto">
+
+                <option value="">Carregando categorias...</option>
+
+            </select>
+    
+            <input type="number" id="precoProduto" placeholder="Preço">
+    
+            <input type="number" id="quantidadeProduto" placeholder="Quantidade">
+    
+            <input type="number" id="estoqueMinimo" placeholder="Estoque mínimo">
+    
+            <div class="modal-buttons">
+    
+                <button id="cancelarProduto">
+                    Cancelar
+                </button>
+    
+                <button id="salvarProduto">
+                    Salvar
+                </button>
+    
+            </div>
+    
+        </div>
+    
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/produtos.js"></script>
+
+</body>
+
+</html>
