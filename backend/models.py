@@ -23,17 +23,18 @@ class Produto:
     id: Optional[int] = None
 
     def esta_abaixo_do_minimo(self):
-        # se o saldo já bateu ou passou do minimo, ta em alerta
         return self.quantidade <= self.estoque_minimo
 
 
 @dataclass
 class Movimentacao:
     produto_id: int
-    tipo: str  # "ENTRADA" ou "SAIDA"
+    tipo: str
     quantidade: int
     observacao: str = ""
     data_hora: str = ""
+    saldo_anterior: int = 0
+    saldo_atual: int = 0
     id: Optional[int] = None
 
     def __post_init__(self):
