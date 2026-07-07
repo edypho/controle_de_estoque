@@ -6,67 +6,132 @@ from backend.models import Categoria, Produto, Movimentacao
 
 
 class CategoriaRepository:
-
     def salvar(self, categoria):
         conexao = criar_conexao()
+
         cursor = conexao.execute(
             "INSERT INTO categorias (nome, descricao) VALUES (?, ?)",
             (categoria.nome, categoria.descricao)
         )
+
         categoria.id = cursor.lastrowid
+
         conexao.commit()
         conexao.close()
+
         return categoria
 
     def buscar_por_id(self, categoria_id):
         conexao = criar_conexao()
-        linha = conexao.execute("SELECT * FROM categorias WHERE id = ?", (categoria_id,)).fetchone()
+
+        linha = conexao.execute(
+            "SELECT * FROM categorias WHERE id = ?",
+            (categoria_id,)
+        ).fetchone()
+
         conexao.close()
+
         if linha is None:
             return None
-        return Categoria(id=linha["id"], nome=linha["nome"], descricao=linha["descricao"])
+
+        return Categoria(
+            id=linha["id"],
+            nome=linha["nome"],
+            descricao=linha["descricao"]
+        )
 
     def listar_todas(self):
         conexao = criar_conexao()
-        linhas = conexao.execute("SELECT * FROM categorias ORDER BY nome").fetchall()
+
+        linhas = conexao.execute(
+            "SELECT * FROM categorias ORDER BY nome"
+        ).fetchall()
+
         conexao.close()
-        return [Categoria(id=l["id"], nome=l["nome"], descricao=l["descricao"]) for l in linhas]
+
+        return [
+            Categoria(
+                id=l["id"],
+                nome=l["nome"],
+                descricao=l["descricao"]
+            )
+            for l in linhas
+        ]
 
 
 class ProdutoRepository:
-
     def salvar(self, produto):
         conexao = criar_conexao()
+
         cursor = conexao.execute(
-            "INSERT INTO produtos (nome, categoria_id, preco, quantidade, estoque_minimo) VALUES (?, ?, ?, ?, ?)",
-            (produto.nome, produto.categoria_id, produto.preco, produto.quantidade, produto.estoque_minimo)
+            """
+            INSERT INTO produtos (
+                nome,
+                categoria_id,
+                preco,
+                quantidade,
+                estoque_minimo
+            )
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (
+                produto.nome,
+                produto.categoria_id,
+                produto.preco,
+                produto.quantidade,
+                produto.estoque_minimo
+            )
         )
+
         produto.id = cursor.lastrowid
+
         conexao.commit()
         conexao.close()
+
         return produto
 
     def buscar_por_id(self, produto_id):
         conexao = criar_conexao()
-        linha = conexao.execute("SELECT * FROM produtos WHERE id = ?", (produto_id,)).fetchone()
+
+        linha = conexao.execute(
+            "SELECT * FROM produtos WHERE id = ?",
+            (produto_id,)
+        ).fetchone()
+
         conexao.close()
+
         return self._linha_para_produto(linha) if linha else None
 
     def listar_todos(self):
         conexao = criar_conexao()
-        linhas = conexao.execute("SELECT * FROM produtos ORDER BY nome").fetchall()
+
+        linhas = conexao.execute(
+            "SELECT * FROM produtos ORDER BY nome"
+        ).fetchall()
+
         conexao.close()
+
         return [self._linha_para_produto(l) for l in linhas]
 
     def atualizar_quantidade(self, produto_id, nova_quantidade):
         conexao = criar_conexao()
-        conexao.execute("UPDATE produtos SET quantidade = ? WHERE id = ?", (nova_quantidade, produto_id))
+
+        conexao.execute(
+            "UPDATE produtos SET quantidade = ? WHERE id = ?",
+            (nova_quantidade, produto_id)
+        )
+
         conexao.commit()
         conexao.close()
 
     def remover(self, produto_id):
         conexao = criar_conexao()
-        conexao.execute("DELETE FROM produtos WHERE id = ?", (produto_id,))
+
+        conexao.execute(
+            "DELETE FROM produtos WHERE id = ?",
+            (produto_id,)
+        )
+
         conexao.commit()
         conexao.close()
 
@@ -82,31 +147,66 @@ class ProdutoRepository:
 
 
 class MovimentacaoRepository:
-
     def salvar(self, movimentacao):
         conexao = criar_conexao()
+
         cursor = conexao.execute(
-            "INSERT INTO movimentacoes (produto_id, tipo, quantidade, observacao, data_hora) VALUES (?, ?, ?, ?, ?)",
-            (movimentacao.produto_id, movimentacao.tipo, movimentacao.quantidade,
-             movimentacao.observacao, movimentacao.data_hora)
+            """
+            INSERT INTO movimentacoes (
+                produto_id,
+                tipo,
+                quantidade,
+                observacao,
+                data_hora,
+                saldo_anterior,
+                saldo_atual
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                movimentacao.produto_id,
+                movimentacao.tipo,
+                movimentacao.quantidade,
+                movimentacao.observacao,
+                movimentacao.data_hora,
+                movimentacao.saldo_anterior,
+                movimentacao.saldo_atual
+            )
         )
+
         movimentacao.id = cursor.lastrowid
+
         conexao.commit()
         conexao.close()
+
         return movimentacao
 
     def listar_por_produto(self, produto_id):
         conexao = criar_conexao()
+
         linhas = conexao.execute(
-            "SELECT * FROM movimentacoes WHERE produto_id = ? ORDER BY data_hora DESC", (produto_id,)
+            """
+            SELECT *
+            FROM movimentacoes
+            WHERE produto_id = ?
+            ORDER BY data_hora DESC
+            """,
+            (produto_id,)
         ).fetchall()
+
         conexao.close()
+
         return [self._linha_para_movimentacao(l) for l in linhas]
 
     def listar_todas(self):
         conexao = criar_conexao()
-        linhas = conexao.execute("SELECT * FROM movimentacoes ORDER BY data_hora DESC").fetchall()
+
+        linhas = conexao.execute(
+            "SELECT * FROM movimentacoes ORDER BY data_hora DESC"
+        ).fetchall()
+
         conexao.close()
+
         return [self._linha_para_movimentacao(l) for l in linhas]
 
     def _linha_para_movimentacao(self, linha):
@@ -117,4 +217,6 @@ class MovimentacaoRepository:
             quantidade=linha["quantidade"],
             observacao=linha["observacao"],
             data_hora=linha["data_hora"],
+            saldo_anterior=linha["saldo_anterior"],
+            saldo_atual=linha["saldo_atual"],
         )
