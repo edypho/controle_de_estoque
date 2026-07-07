@@ -34,7 +34,9 @@ def criar_tabelas():
         CREATE TABLE IF NOT EXISTS categorias (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome TEXT NOT NULL UNIQUE,
-            descricao TEXT
+            descricao TEXT,
+            ativo INTEGER NOT NULL DEFAULT 1,
+            criado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
         )
     """)
 
@@ -42,10 +44,15 @@ def criar_tabelas():
         CREATE TABLE IF NOT EXISTS produtos (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome TEXT NOT NULL,
+            descricao TEXT,
+            sku TEXT,
+            fornecedor TEXT,
             categoria_id INTEGER NOT NULL,
             preco REAL NOT NULL,
             quantidade INTEGER NOT NULL DEFAULT 0,
             estoque_minimo INTEGER NOT NULL DEFAULT 0,
+            ativo INTEGER NOT NULL DEFAULT 1,
+            criado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (categoria_id) REFERENCES categorias (id)
         )
     """)
@@ -63,6 +70,55 @@ def criar_tabelas():
             FOREIGN KEY (produto_id) REFERENCES produtos (id)
         )
     """)
+
+    adicionar_coluna_se_nao_existir(
+        conn,
+        "categorias",
+        "ativo",
+        "INTEGER NOT NULL DEFAULT 1"
+    )
+
+    adicionar_coluna_se_nao_existir(
+        conn,
+        "categorias",
+        "criado_em",
+        "TEXT"
+    )
+
+    adicionar_coluna_se_nao_existir(
+        conn,
+        "produtos",
+        "descricao",
+        "TEXT"
+    )
+
+    adicionar_coluna_se_nao_existir(
+        conn,
+        "produtos",
+        "sku",
+        "TEXT"
+    )
+
+    adicionar_coluna_se_nao_existir(
+        conn,
+        "produtos",
+        "fornecedor",
+        "TEXT"
+    )
+
+    adicionar_coluna_se_nao_existir(
+        conn,
+        "produtos",
+        "ativo",
+        "INTEGER NOT NULL DEFAULT 1"
+    )
+
+    adicionar_coluna_se_nao_existir(
+        conn,
+        "produtos",
+        "criado_em",
+        "TEXT"
+    )
 
     adicionar_coluna_se_nao_existir(
         conn,
