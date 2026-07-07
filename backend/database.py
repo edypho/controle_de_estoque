@@ -1,6 +1,7 @@
 import sqlite3
 import os
 
+
 CAMINHO_BANCO = os.path.join(os.path.dirname(os.path.dirname(__file__)), "estoque.db")
 
 
@@ -9,6 +10,10 @@ def conectar():
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")
     return conn
+
+
+def criar_conexao():
+    return conectar()
 
 
 def criar_tabelas():
@@ -50,6 +55,10 @@ def criar_tabelas():
     conn.close()
 
 
-if __name__ == "__main__":
+def inicializar_banco():
     criar_tabelas()
+
+
+if __name__ == "__main__":
+    inicializar_banco()
     print("banco criado")
