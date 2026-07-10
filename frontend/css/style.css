@@ -312,49 +312,147 @@ AÇÕES
 
 }
 
-/* =======================
+/* ===========================
    MODAL
-======================= */
+=========================== */
 
 .modal{
+
     position:fixed;
+
     inset:0;
+
     background:rgba(0,0,0,.45);
 
     display:flex;
+
     justify-content:center;
+
     align-items:center;
+
+    opacity:1;
+
+    transition:.25s;
+
+    z-index:999;
+
 }
 
 .hidden{
-    display:none;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    pointer-events:none;
+
 }
 
 .modal-content{
 
-    background:white;
+    width:500px;
 
-    width:450px;
-
-    padding:30px;
+    background:#fff;
 
     border-radius:15px;
+
+    padding:25px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.2);
+
+    animation:modal .25s;
+
+}
+
+@keyframes modal{
+
+    from{
+
+        transform:translateY(-20px);
+
+        opacity:0;
+
+    }
+
+    to{
+
+        transform:translateY(0);
+
+        opacity:1;
+
+    }
+
+}
+
+.modal-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:20px;
+
+}
+
+.btn-close{
+
+    border:none;
+
+    background:none;
+
+    font-size:28px;
+
+    cursor:pointer;
+
+    color:#777;
+
+}
+
+.btn-close:hover{
+
+    color:#000;
+
+}
+
+.form-group{
 
     display:flex;
 
     flex-direction:column;
 
-    gap:15px;
+    margin-bottom:15px;
 
 }
 
-.modal-content input{
+.form-group label{
+
+    margin-bottom:6px;
+
+    font-weight:600;
+
+}
+
+.form-group input,
+.form-group select{
 
     padding:12px;
 
     border-radius:8px;
 
     border:1px solid #ccc;
+
+    font-size:15px;
+
+}
+
+.form-group input:focus,
+.form-group select:focus{
+
+    outline:none;
+
+    border-color:#2563EB;
 
 }
 
@@ -365,5 +463,112 @@ AÇÕES
     justify-content:flex-end;
 
     gap:10px;
+
+    margin-top:20px;
+
+}
+
+.btn-cancelar{
+
+    padding:10px 18px;
+
+    border:1px solid #ccc;
+
+    background:white;
+
+    cursor:pointer;
+
+    border-radius:8px;
+
+}
+
+.btn-salvar{
+
+    padding:10px 20px;
+
+    background:#2563EB;
+
+    color:white;
+
+    border:none;
+
+    cursor:pointer;
+
+    border-radius:8px;
+
+}
+
+.btn-salvar:hover{
+
+    background:#1D4ED8;
+
+}
+
+
+
+.estoque-baixo{
+
+    color:#dc2626;
+
+    font-weight:bold;
+
+}
+
+.btnEntrada,
+.btnSaida,
+.btnExcluir{
+
+    width:38px;
+    height:38px;
+
+    border:none;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    color:white;
+
+    transition:.2s;
+
+    margin:0 3px;
+
+    font-size:15px;
+
+}
+
+.btnEntrada{
+
+    background:#22c55e;
+
+}
+
+.btnEntrada:hover{
+
+    background:#16a34a;
+
+}
+
+.btnSaida{
+
+    background:#f59e0b;
+
+}
+
+.btnSaida:hover{
+
+    background:#d97706;
+
+}
+
+.btnExcluir{
+
+    background:#ef4444;
+
+}
+
+.btnExcluir:hover{
+
+    background:#dc2626;
 
 }

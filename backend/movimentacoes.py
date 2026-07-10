@@ -67,3 +67,26 @@ def historico_produto(produto_id):
     ).fetchall()
     conn.close()
     return linhas
+
+
+def resumo_movimentacoes():
+    conn = conectar()
+
+    entradas = conn.execute("""
+        SELECT COUNT(*) AS total
+        FROM movimentacoes
+        WHERE tipo = 'ENTRADA'
+    """).fetchone()["total"]
+
+    saidas = conn.execute("""
+        SELECT COUNT(*) AS total
+        FROM movimentacoes
+        WHERE tipo = 'SAIDA'
+    """).fetchone()["total"]
+
+    conn.close()
+
+    return {
+        "entradas": entradas,
+        "saidas": saidas
+    }

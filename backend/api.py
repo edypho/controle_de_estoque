@@ -109,6 +109,9 @@ def get_estoque_baixo():
     linhas = movimentacoes.produtos_estoque_baixo()
     return jsonify([linha_para_dict(l) for l in linhas])
 
+@app.route("/dashboard", methods=["GET"])
+def get_dashboard():
+    return jsonify(movimentacoes.resumo_movimentacoes())
 
 @app.route("/relatorio/estoque", methods=["GET"])
 def get_relatorio_estoque():
