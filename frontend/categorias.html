@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categorias - Controle de Estoque</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <aside class="sidebar">
+
+            <div class="logo">
+                <i class="fa-solid fa-box"></i>
+                <h2>Estoque</h2>
+            </div>
+
+            <nav>
+                <ul>
+
+                    <li onclick="location.href='index.html'">
+                        <i class="fa-solid fa-chart-line"></i>
+                        Dashboard
+                    </li>
+
+                    <li onclick="location.href='produtos.html'">
+                        <i class="fa-solid fa-boxes-stacked"></i>
+                        Produtos
+                    </li>
+
+                    <li class="active">
+                        <i class="fa-solid fa-tags"></i>
+                        Categorias
+                    </li>
+
+                    <li onclick="location.href='relatorios.html'">
+                        <i class="fa-solid fa-file-lines"></i>
+                        Relatórios
+                    </li>
+
+                </ul>
+            </nav>
+
+        </aside>
+
+        <main class="content">
+
+            <header>
+
+                <h1>Categorias</h1>
+
+                <div class="actions">
+
+                    <input
+                        type="text"
+                        id="pesquisaCategoria"
+                        placeholder="Pesquisar categoria..."
+                    >
+
+                    <button id="btnNovaCategoria">
+                        <i class="fa-solid fa-plus"></i>
+                        Nova Categoria
+                    </button>
+
+                </div>
+
+            </header>
+
+            <section class="table-area">
+
+                <table>
+
+                    <h2>Lista de Categorias</h2>
+
+                    <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Descrição</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="categorias">
+
+                    </tbody>
+
+                </table>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <div id="modalCategoria" class="modal hidden">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h2>Nova Categoria</h2>
+
+                <button id="fecharModalCategoria" class="btn-close">
+                    &times;
+                </button>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="nomeCategoria">Nome</label>
+
+                <input
+                    type="text"
+                    id="nomeCategoria"
+                    placeholder="Digite o nome da categoria">
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="descricaoCategoria">Descrição</label>
+
+                <input
+                    type="text"
+                    id="descricaoCategoria"
+                    placeholder="Digite uma descrição">
+
+            </div>
+
+            <div class="modal-buttons">
+
+                <button id="cancelarCategoria" class="btn-cancelar">
+                    Cancelar
+                </button>
+
+                <button id="salvarCategoria" class="btn-salvar">
+                    Salvar Categoria
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/categorias.js"></script>
+
+</body>
+
+</html>

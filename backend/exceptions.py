@@ -12,3 +12,9 @@ class EstoqueInsuficienteError(Exception):
 
 class DadosInvalidosError(Exception):
     pass
+
+class CategoriaDuplicadaError(Exception):
+    pass
+
+class ProdutoComMovimentacaoError(Exception):
+    pass

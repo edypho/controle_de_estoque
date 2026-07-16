@@ -264,7 +264,8 @@ AÇÕES
 
 }
 
-#btnNovoProduto{
+#btnNovoProduto,
+#btnNovaCategoria{
 
     background:#2563EB;
 
@@ -284,7 +285,8 @@ AÇÕES
 
 }
 
-#btnNovoProduto:hover{
+#btnNovoProduto:hover,
+#btnNovaCategoria:hover{
 
     background:#1D4ED8;
 
@@ -516,6 +518,7 @@ AÇÕES
 
 .btnEntrada,
 .btnSaida,
+.btnHistorico,
 .btnExcluir{
 
     width:38px;
@@ -561,6 +564,18 @@ AÇÕES
 
 }
 
+.btnHistorico{
+
+    background:#2563EB;
+
+}
+
+.btnHistorico:hover{
+
+    background:#1D4ED8;
+
+}
+
 .btnExcluir{
 
     background:#ef4444;
@@ -570,5 +585,19 @@ AÇÕES
 .btnExcluir:hover{
 
     background:#dc2626;
+
+}
+
+.modal-grande{
+
+    width:800px;
+
+    max-width:90%;
+
+}
+
+.relatorio-secao{
+
+    margin-bottom:30px;
 
 }

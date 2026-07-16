@@ -39,6 +39,16 @@
                         Produtos
                     </li>
 
+                    <li onclick="location.href='categorias.html'">
+                        <i class="fa-solid fa-tags"></i>
+                        Categorias
+                    </li>
+
+                    <li onclick="location.href='relatorios.html'">
+                        <i class="fa-solid fa-file-lines"></i>
+                        Relatórios
+                    </li>
+
                 </ul>
             </nav>
 
@@ -243,6 +253,43 @@
     
         </div>
     
+    </div>
+
+    <div id="modalHistorico" class="modal hidden">
+
+        <div class="modal-content modal-grande">
+
+            <div class="modal-header">
+
+                <h2>Histórico de Movimentações</h2>
+
+                <button id="fecharHistorico" class="btn-close">
+                    &times;
+                </button>
+
+            </div>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Quantidade</th>
+                        <th>Observação</th>
+                        <th>Data</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="historicoProduto">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
     </div>
 
     <script src="js/api.js"></script>

@@ -12,6 +12,68 @@ async function listarProdutos() {
 
 }
 
+async function cadastrarCategoria(categoria) {
+
+    const resposta = await fetch(`${API_URL}/categorias`, {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify(categoria)
+
+    });
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+        throw new Error(dados.erro || "Erro ao cadastrar categoria.");
+    }
+
+    return dados;
+
+}
+
+async function listarHistoricoProduto(id) {
+
+    const resposta = await fetch(`${API_URL}/produtos/${id}/historico`);
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+        throw new Error(dados.erro || "Erro ao buscar historico do produto.");
+    }
+
+    return dados;
+
+}
+
+async function listarRelatorioEstoque() {
+
+    const resposta = await fetch(`${API_URL}/relatorio/estoque`);
+
+    if (!resposta.ok) {
+        throw new Error("Erro ao carregar relatorio de estoque.");
+    }
+
+    return await resposta.json();
+
+}
+
+async function listarRelatorioMovimentacoes() {
+
+    const resposta = await fetch(`${API_URL}/relatorio/movimentacoes`);
+
+    if (!resposta.ok) {
+        throw new Error("Erro ao carregar relatorio de movimentacoes.");
+    }
+
+    return await resposta.json();
+
+}
+
 async function listarCategorias() {
 
     const resposta = await fetch(`${API_URL}/categorias`);

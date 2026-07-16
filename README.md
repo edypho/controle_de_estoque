@@ -39,8 +39,9 @@ pip install -r requirements.txt
 python -m backend.api
 ```
 
-A API sobe em `http://localhost:5000`. Deixa rodando nesse terminal
-enquanto o frontend faz as requisicoes.
+O sistema sobe em `http://localhost:5000`. Deixa rodando nesse terminal
+e abre esse endereco no navegador. O Flask entrega o frontend e tambem
+responde as requisicoes da API.
 
 Pra testar sem o frontend, roda os testes:
 
@@ -86,11 +87,14 @@ os testes fazem) sem precisar da API rodando.
 | GET | /produtos/\<id>/saldo | saldo atual |
 | GET | /produtos/\<id>/historico | movimentacoes daquele produto |
 | GET | /produtos-estoque-baixo | produtos em alerta |
+| GET | /dashboard | totais de entradas e saidas |
 | GET | /relatorio/estoque | relatorio de inventario |
 | GET | /relatorio/movimentacoes | relatorio de movimentacoes |
 
 Em erro (produto nao encontrado, estoque insuficiente, dado invalido),
-a API responde com status 400 ou 404 e um JSON `{"erro": "mensagem"}`.
+a API responde com status 400, 404 ou 409 e um JSON `{"erro": "mensagem"}`.
+Um produto que ja possui movimentacoes nao pode ser excluido, pois seu
+historico precisa continuar salvo.
 
 ## Exemplo de como o frontend chama a API
 

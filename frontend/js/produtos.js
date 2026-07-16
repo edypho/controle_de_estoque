@@ -112,6 +112,14 @@ async function carregarProdutos() {
 
                         </button>
 
+                        <button class="btnHistorico"
+                            data-id="${produto.id}"
+                            title="Historico">
+
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+
+                        </button>
+
                         <button class="btnExcluir"
                             data-id="${produto.id}"
                             title="Excluir">
@@ -173,7 +181,89 @@ function adicionarEventos() {
 
     });
 
+    document.querySelectorAll(".btnHistorico").forEach(botao => {
+
+        botao.addEventListener("click", () => {
+
+            abrirHistorico(botao.dataset.id);
+
+        });
+
+    });
+
 }
+
+// =========================
+// Historico
+// =========================
+
+const modalHistorico = document.getElementById("modalHistorico");
+const btnFecharHistorico = document.getElementById("fecharHistorico");
+
+async function abrirHistorico(id) {
+
+    const tbody = document.getElementById("historicoProduto");
+
+    tbody.innerHTML = "";
+
+    try {
+
+        const movimentacoes = await listarHistoricoProduto(id);
+
+        if (movimentacoes.length === 0) {
+
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="4" style="text-align:center;">
+                        Nenhuma movimentacao registrada.
+                    </td>
+                </tr>
+            `;
+
+        } else {
+
+            movimentacoes.forEach(movimentacao => {
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${movimentacao.tipo}</td>
+                        <td>${movimentacao.quantidade}</td>
+                        <td>${movimentacao.observacao || "-"}</td>
+                        <td>${movimentacao.data_hora}</td>
+                    </tr>
+                `;
+
+            });
+
+        }
+
+        modalHistorico.classList.remove("hidden");
+
+    } catch (erro) {
+
+        alert(erro.message);
+
+    }
+
+}
+
+function fecharHistorico() {
+
+    modalHistorico.classList.add("hidden");
+
+}
+
+btnFecharHistorico.addEventListener("click", fecharHistorico);
+
+modalHistorico.addEventListener("click", (e) => {
+
+    if (e.target === modalHistorico) {
+
+        fecharHistorico();
+
+    }
+
+});
 
 // =========================
 // Categorias

@@ -2,6 +2,11 @@ import unittest
 import os
 import backend.database as database
 from backend import produtos, movimentacoes
+from backend.exceptions import (
+    DadosInvalidosError,
+    EstoqueInsuficienteError,
+    ProdutoComMovimentacaoError,
+)
 
 
 class TestEstoque(unittest.TestCase):
@@ -33,12 +38,21 @@ class TestEstoque(unittest.TestCase):
 
     def test_saida_maior_que_saldo_da_erro(self):
         movimentacoes.registrar_entrada(self.produto_id, 5)
-        with self.assertRaises(Exception):
+        with self.assertRaises(EstoqueInsuficienteError):
             movimentacoes.registrar_saida(self.produto_id, 100)
 
     def test_quantidade_negativa_da_erro(self):
-        with self.assertRaises(Exception):
+        with self.assertRaises(DadosInvalidosError):
             movimentacoes.registrar_entrada(self.produto_id, -5)
+
+    def test_quantidade_decimal_da_erro(self):
+        with self.assertRaises(DadosInvalidosError):
+            movimentacoes.registrar_entrada(self.produto_id, 1.5)
+
+    def test_nao_remove_produto_com_historico(self):
+        movimentacoes.registrar_entrada(self.produto_id, 5)
+        with self.assertRaises(ProdutoComMovimentacaoError):
+            produtos.remover_produto(self.produto_id)
 
     def test_alerta_estoque_minimo(self):
         baixo = movimentacoes.produtos_estoque_baixo()

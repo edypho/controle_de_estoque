@@ -4,25 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Controle de Estoque</title>
+    <title>Relatórios - Controle de Estoque</title>
 
-    <!-- CSS -->
     <link rel="stylesheet" href="css/style.css">
 
-    <!-- Fonte -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
 
-    <!-- Ícones -->
     <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 
 <body>
 
     <div class="container">
 
-        <!-- Sidebar -->
         <aside class="sidebar">
 
             <div class="logo">
@@ -31,10 +27,9 @@
             </div>
 
             <nav>
-
                 <ul>
 
-                    <li class="active">
+                    <li onclick="location.href='index.html'">
                         <i class="fa-solid fa-chart-line"></i>
                         Dashboard
                     </li>
@@ -49,23 +44,21 @@
                         Categorias
                     </li>
 
-                    <li onclick="location.href='relatorios.html'">
+                    <li class="active">
                         <i class="fa-solid fa-file-lines"></i>
                         Relatórios
                     </li>
 
                 </ul>
-
             </nav>
 
         </aside>
 
-        <!-- Conteúdo -->
         <main class="content">
 
             <header>
 
-                <h1>Dashboard</h1>
+                <h1>Relatórios</h1>
 
                 <div class="user">
 
@@ -77,68 +70,64 @@
 
             </header>
 
-            <section class="cards">
+            <section class="table-area relatorio-secao">
 
-                <div class="card">
-                    <h3>Total de Produtos</h3>
-                    <h2 id="totalProdutos">0</h2>
-                </div>
-                
-                <div class="card">
-                    <h3>Entradas</h3>
-                    <h2 id="totalEntradas">0</h2>
-                </div>
-                
-                <div class="card">
-                    <h3>Saídas</h3>
-                    <h2 id="totalSaidas">0</h2>
-                </div>
-                
-                <div class="card">
-                    <h3>Estoque Baixo</h3>
-                    <h2 id="estoqueBaixo">0</h2>
-                </div>
-
-            </section>
-
-            <section class="table-area">
-
-                <h2>Produtos Recentes</h2>
+                <h2>Inventário Atual</h2>
 
                 <table>
 
                     <thead>
 
                         <tr>
-
                             <th>Produto</th>
-
-                            <th>Categoria</th>
-
                             <th>Quantidade</th>
-
-                            <th>Preço</th>
-
+                            <th>Preço Unitário</th>
+                            <th>Valor Total</th>
+                            <th>Situação</th>
                         </tr>
 
                     </thead>
 
-                    <tbody id="ultimosProdutos">
+                    <tbody id="relatorioEstoque">
 
                     </tbody>
 
                 </table>
 
-                
             </section>
 
+            <section class="table-area">
+
+                <h2>Movimentações</h2>
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Produto</th>
+                            <th>Tipo</th>
+                            <th>Quantidade</th>
+                            <th>Observação</th>
+                            <th>Data</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="relatorioMovimentacoes">
+
+                    </tbody>
+
+                </table>
+
+            </section>
 
         </main>
 
     </div>
-    <!-- Scripts -->
+
     <script src="js/api.js"></script>
-    <script src="js/app.js"></script>
+    <script src="js/relatorios.js"></script>
 
 </body>
 

@@ -1,14 +1,10 @@
 import sqlite3
 import os
 
-import os
-
 CAMINHO_BANCO = os.path.join(
     os.path.dirname(os.path.dirname(__file__)),
     "estoque.db"
 )
-
-print("Banco utilizado:", os.path.abspath(CAMINHO_BANCO))
 
 def conectar():
     conn = sqlite3.connect(CAMINHO_BANCO)
