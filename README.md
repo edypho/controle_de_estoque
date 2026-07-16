@@ -92,9 +92,9 @@ os testes fazem) sem precisar da API rodando.
 | GET | /relatorio/movimentacoes | relatorio de movimentacoes |
 
 Em erro (produto nao encontrado, estoque insuficiente, dado invalido),
-a API responde com status 400, 404 ou 409 e um JSON `{"erro": "mensagem"}`.
-Um produto que ja possui movimentacoes nao pode ser excluido, pois seu
-historico precisa continuar salvo.
+a API responde com status 400 ou 404 e um JSON `{"erro": "mensagem"}`.
+Ao remover um produto, ele e apenas inativado. Ele deixa de aparecer nas
+listagens, mas seu historico de movimentacoes continua salvo.
 
 ## Exemplo de como o frontend chama a API
 

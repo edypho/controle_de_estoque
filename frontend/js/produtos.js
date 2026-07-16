@@ -214,7 +214,7 @@ async function abrirHistorico(id) {
 
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="4" style="text-align:center;">
+                    <td colspan="6" style="text-align:center;">
                         Nenhuma movimentacao registrada.
                     </td>
                 </tr>
@@ -228,6 +228,8 @@ async function abrirHistorico(id) {
                     <tr>
                         <td>${movimentacao.tipo}</td>
                         <td>${movimentacao.quantidade}</td>
+                        <td>${movimentacao.saldo_anterior}</td>
+                        <td>${movimentacao.saldo_atual}</td>
                         <td>${movimentacao.observacao || "-"}</td>
                         <td>${movimentacao.data_hora}</td>
                     </tr>

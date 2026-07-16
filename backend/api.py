@@ -10,7 +10,6 @@ from backend.exceptions import (
     CategoriaNaoEncontradaError,
     DadosInvalidosError,
     EstoqueInsuficienteError,
-    ProdutoComMovimentacaoError,
     ProdutoNaoEncontradoError,
 )
 
@@ -51,11 +50,6 @@ def erro_dados_invalidos(erro):
 @app.errorhandler(ProdutoNaoEncontradoError)
 def erro_nao_encontrado(erro):
     return jsonify({"erro": str(erro)}), 404
-
-
-@app.errorhandler(ProdutoComMovimentacaoError)
-def erro_conflito(erro):
-    return jsonify({"erro": str(erro)}), 409
 
 
 @app.route("/")

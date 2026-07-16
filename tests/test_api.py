@@ -94,7 +94,7 @@ class TestApi(unittest.TestCase):
         self.assertEqual(resposta.status_code, 404)
         self.assertIn("erro", resposta.get_json())
 
-    def test_nao_exclui_produto_com_historico(self):
+    def test_exclui_produto_e_preserva_historico(self):
         produto_id = self.criar_produto()
         self.cliente.post(
             f"/produtos/{produto_id}/entrada",
@@ -103,8 +103,12 @@ class TestApi(unittest.TestCase):
 
         resposta = self.cliente.delete(f"/produtos/{produto_id}")
 
-        self.assertEqual(resposta.status_code, 409)
-        self.assertIn("movimentacoes", resposta.get_json()["erro"])
+        self.assertEqual(resposta.status_code, 200)
+        self.assertEqual(self.cliente.get(f"/produtos/{produto_id}").status_code, 404)
+
+        historico = self.cliente.get("/relatorio/movimentacoes").get_json()
+        self.assertEqual(len(historico), 1)
+        self.assertEqual(historico[0]["produto_id"], produto_id)
 
 
 if __name__ == "__main__":

@@ -1,4 +1,5 @@
 from datetime import datetime
+
 from backend.database import conectar
 from backend.exceptions import (
     DadosInvalidosError,
@@ -9,12 +10,14 @@ from backend.exceptions import (
 
 def _validar_quantidade(quantidade):
     if isinstance(quantidade, bool) or not isinstance(quantidade, int) or quantidade <= 0:
-        raise DadosInvalidosError("quantidade deve ser um numero inteiro maior que zero")
+        raise DadosInvalidosError(
+            "quantidade deve ser um numero inteiro maior que zero"
+        )
 
 
 def _buscar_produto(conn, produto_id):
     produto = conn.execute(
-        "SELECT * FROM produtos WHERE id = ?",
+        "SELECT * FROM produtos WHERE id = ? AND ativo = 1",
         (produto_id,)
     ).fetchone()
     if produto is None:
@@ -22,53 +25,62 @@ def _buscar_produto(conn, produto_id):
     return produto
 
 
-def registrar_entrada(produto_id, quantidade, observacao=""):
+def _registrar_movimentacao(produto_id, tipo, quantidade, observacao):
     _validar_quantidade(quantidade)
     if not isinstance(observacao, str):
         raise DadosInvalidosError("observacao deve ser um texto")
-    data_hora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     conn = conectar()
     try:
         produto = _buscar_produto(conn, produto_id)
-        novo_saldo = produto["quantidade"] + quantidade
+        saldo_anterior = produto["quantidade"]
+
+        if tipo == "SAIDA" and quantidade > saldo_anterior:
+            raise EstoqueInsuficienteError("estoque insuficiente")
+
+        if tipo == "ENTRADA":
+            saldo_atual = saldo_anterior + quantidade
+        else:
+            saldo_atual = saldo_anterior - quantidade
+
+        data_hora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
         conn.execute(
-            "INSERT INTO movimentacoes (produto_id, tipo, quantidade, observacao, data_hora) VALUES (?, ?, ?, ?, ?)",
-            (produto_id, "ENTRADA", quantidade, observacao.strip(), data_hora)
+            """
+            INSERT INTO movimentacoes (
+                produto_id, tipo, quantidade, observacao, data_hora,
+                saldo_anterior, saldo_atual
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                produto_id,
+                tipo,
+                quantidade,
+                observacao.strip(),
+                data_hora,
+                saldo_anterior,
+                saldo_atual,
+            )
         )
-        conn.execute("UPDATE produtos SET quantidade = ? WHERE id = ?", (novo_saldo, produto_id))
+        conn.execute(
+            "UPDATE produtos SET quantidade = ? WHERE id = ?",
+            (saldo_atual, produto_id)
+        )
         conn.commit()
     except Exception:
         conn.rollback()
         raise
     finally:
         conn.close()
+
+
+def registrar_entrada(produto_id, quantidade, observacao=""):
+    _registrar_movimentacao(produto_id, "ENTRADA", quantidade, observacao)
 
 
 def registrar_saida(produto_id, quantidade, observacao=""):
-    _validar_quantidade(quantidade)
-    if not isinstance(observacao, str):
-        raise DadosInvalidosError("observacao deve ser um texto")
-    data_hora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-    conn = conectar()
-    try:
-        produto = _buscar_produto(conn, produto_id)
-        if quantidade > produto["quantidade"]:
-            raise EstoqueInsuficienteError("estoque insuficiente")
-
-        novo_saldo = produto["quantidade"] - quantidade
-        conn.execute(
-            "INSERT INTO movimentacoes (produto_id, tipo, quantidade, observacao, data_hora) VALUES (?, ?, ?, ?, ?)",
-            (produto_id, "SAIDA", quantidade, observacao.strip(), data_hora)
-        )
-        conn.execute("UPDATE produtos SET quantidade = ? WHERE id = ?", (novo_saldo, produto_id))
-        conn.commit()
-    except Exception:
-        conn.rollback()
-        raise
-    finally:
-        conn.close()
+    _registrar_movimentacao(produto_id, "SAIDA", quantidade, observacao)
 
 
 def consultar_saldo(produto_id):
@@ -81,14 +93,16 @@ def consultar_saldo(produto_id):
 
 def produtos_estoque_baixo():
     conn = conectar()
-    linhas = conn.execute("SELECT * FROM produtos").fetchall()
+    linhas = conn.execute(
+        "SELECT * FROM produtos WHERE ativo = 1"
+    ).fetchall()
     conn.close()
 
-    resultado = []
-    for produto in linhas:
-        if produto["quantidade"] <= produto["estoque_minimo"]:
-            resultado.append(produto)
-    return resultado
+    return [
+        produto
+        for produto in linhas
+        if produto["quantidade"] <= produto["estoque_minimo"]
+    ]
 
 
 def historico_produto(produto_id):
@@ -96,7 +110,11 @@ def historico_produto(produto_id):
     try:
         _buscar_produto(conn, produto_id)
         return conn.execute(
-            "SELECT * FROM movimentacoes WHERE produto_id = ? ORDER BY data_hora DESC",
+            """
+            SELECT * FROM movimentacoes
+            WHERE produto_id = ?
+            ORDER BY data_hora DESC, id DESC
+            """,
             (produto_id,)
         ).fetchall()
     finally:
@@ -105,22 +123,12 @@ def historico_produto(produto_id):
 
 def resumo_movimentacoes():
     conn = conectar()
-
-    entradas = conn.execute("""
-        SELECT COUNT(*) AS total
-        FROM movimentacoes
-        WHERE tipo = 'ENTRADA'
-    """).fetchone()["total"]
-
-    saidas = conn.execute("""
-        SELECT COUNT(*) AS total
-        FROM movimentacoes
-        WHERE tipo = 'SAIDA'
-    """).fetchone()["total"]
-
+    entradas = conn.execute(
+        "SELECT COUNT(*) AS total FROM movimentacoes WHERE tipo = 'ENTRADA'"
+    ).fetchone()["total"]
+    saidas = conn.execute(
+        "SELECT COUNT(*) AS total FROM movimentacoes WHERE tipo = 'SAIDA'"
+    ).fetchone()["total"]
     conn.close()
 
-    return {
-        "entradas": entradas,
-        "saidas": saidas
-    }
+    return {"entradas": entradas, "saidas": saidas}

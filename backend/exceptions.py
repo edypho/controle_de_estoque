@@ -15,6 +15,3 @@ class DadosInvalidosError(Exception):
 
 class CategoriaDuplicadaError(Exception):
     pass
-
-class ProdutoComMovimentacaoError(Exception):
-    pass

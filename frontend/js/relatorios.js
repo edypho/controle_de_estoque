@@ -89,7 +89,7 @@ async function carregarRelatorioMovimentacoes() {
 
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="5" style="text-align:center;">
+                    <td colspan="7" style="text-align:center;">
                         Nenhuma movimentacao registrada.
                     </td>
                 </tr>
@@ -106,6 +106,8 @@ async function carregarRelatorioMovimentacoes() {
                     <td>${mapaProdutos[movimentacao.produto_id] || "Produto nao encontrado"}</td>
                     <td>${movimentacao.tipo}</td>
                     <td>${movimentacao.quantidade}</td>
+                    <td>${movimentacao.saldo_anterior}</td>
+                    <td>${movimentacao.saldo_atual}</td>
                     <td>${movimentacao.observacao || "-"}</td>
                     <td>${movimentacao.data_hora}</td>
                 </tr>

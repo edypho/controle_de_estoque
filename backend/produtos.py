@@ -5,19 +5,22 @@ from backend.exceptions import (
     CategoriaDuplicadaError,
     CategoriaNaoEncontradaError,
     DadosInvalidosError,
-    ProdutoComMovimentacaoError,
     ProdutoNaoEncontradoError,
 )
 
 
 def _inteiro_nao_negativo(valor, nome_campo):
     if isinstance(valor, bool) or not isinstance(valor, int) or valor < 0:
-        raise DadosInvalidosError(f"{nome_campo} deve ser um numero inteiro maior ou igual a zero")
+        raise DadosInvalidosError(
+            f"{nome_campo} deve ser um numero inteiro maior ou igual a zero"
+        )
 
 
 def _numero_nao_negativo(valor, nome_campo):
     if isinstance(valor, bool) or not isinstance(valor, (int, float)) or valor < 0:
-        raise DadosInvalidosError(f"{nome_campo} deve ser um numero maior ou igual a zero")
+        raise DadosInvalidosError(
+            f"{nome_campo} deve ser um numero maior ou igual a zero"
+        )
 
 
 def cadastrar_categoria(nome, descricao=""):
@@ -43,7 +46,9 @@ def cadastrar_categoria(nome, descricao=""):
 
 def listar_categorias():
     conn = conectar()
-    linhas = conn.execute("SELECT * FROM categorias ORDER BY nome").fetchall()
+    linhas = conn.execute(
+        "SELECT * FROM categorias WHERE ativo = 1 ORDER BY nome"
+    ).fetchall()
     conn.close()
     return linhas
 
@@ -59,13 +64,19 @@ def cadastrar_produto(nome, categoria_id, preco, quantidade=0, estoque_minimo=0)
     _inteiro_nao_negativo(estoque_minimo, "estoque_minimo")
 
     conn = conectar()
-    categoria = conn.execute("SELECT id FROM categorias WHERE id = ?", (categoria_id,)).fetchone()
+    categoria = conn.execute(
+        "SELECT id FROM categorias WHERE id = ? AND ativo = 1",
+        (categoria_id,)
+    ).fetchone()
     if categoria is None:
         conn.close()
         raise CategoriaNaoEncontradaError("categoria nao encontrada")
 
     cursor = conn.execute(
-        "INSERT INTO produtos (nome, categoria_id, preco, quantidade, estoque_minimo) VALUES (?, ?, ?, ?, ?)",
+        """
+        INSERT INTO produtos (nome, categoria_id, preco, quantidade, estoque_minimo)
+        VALUES (?, ?, ?, ?, ?)
+        """,
         (nome.strip(), categoria_id, preco, quantidade, estoque_minimo)
     )
     conn.commit()
@@ -76,14 +87,19 @@ def cadastrar_produto(nome, categoria_id, preco, quantidade=0, estoque_minimo=0)
 
 def listar_produtos():
     conn = conectar()
-    linhas = conn.execute("SELECT * FROM produtos ORDER BY nome").fetchall()
+    linhas = conn.execute(
+        "SELECT * FROM produtos WHERE ativo = 1 ORDER BY nome"
+    ).fetchall()
     conn.close()
     return linhas
 
 
 def buscar_produto(produto_id):
     conn = conectar()
-    linha = conn.execute("SELECT * FROM produtos WHERE id = ?", (produto_id,)).fetchone()
+    linha = conn.execute(
+        "SELECT * FROM produtos WHERE id = ? AND ativo = 1",
+        (produto_id,)
+    ).fetchone()
     conn.close()
     if linha is None:
         raise ProdutoNaoEncontradoError("produto nao encontrado")
@@ -93,17 +109,9 @@ def buscar_produto(produto_id):
 def remover_produto(produto_id):
     buscar_produto(produto_id)
     conn = conectar()
-    total_movimentacoes = conn.execute(
-        "SELECT COUNT(*) AS total FROM movimentacoes WHERE produto_id = ?",
+    conn.execute(
+        "UPDATE produtos SET ativo = 0 WHERE id = ?",
         (produto_id,)
-    ).fetchone()["total"]
-
-    if total_movimentacoes > 0:
-        conn.close()
-        raise ProdutoComMovimentacaoError(
-            "nao e possivel excluir um produto que possui movimentacoes"
-        )
-
-    conn.execute("DELETE FROM produtos WHERE id = ?", (produto_id,))
+    )
     conn.commit()
     conn.close()

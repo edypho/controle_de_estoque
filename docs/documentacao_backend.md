@@ -51,8 +51,8 @@ negativo. O saldo e recalculado toda vez que tem uma movimentacao nova.
 Um produto fica em alerta quando a quantidade e menor ou igual ao
 estoque minimo cadastrado pra ele.
 
-Um produto que ja tem entrada ou saida registrada nao pode ser excluido.
-Essa regra evita apagar o produto e deixar seu historico inconsistente.
+Ao remover um produto, o sistema apenas marca esse produto como inativo.
+Ele deixa de aparecer nas listagens, mas seu historico continua salvo.
 
 ## Rodando
 

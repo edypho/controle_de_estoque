@@ -1,11 +1,11 @@
 import unittest
 import os
 import backend.database as database
-from backend import produtos, movimentacoes
+from backend import produtos, movimentacoes, relatorios
 from backend.exceptions import (
     DadosInvalidosError,
     EstoqueInsuficienteError,
-    ProdutoComMovimentacaoError,
+    ProdutoNaoEncontradoError,
 )
 
 
@@ -36,6 +36,10 @@ class TestEstoque(unittest.TestCase):
         movimentacoes.registrar_saida(self.produto_id, 8)
         self.assertEqual(movimentacoes.consultar_saldo(self.produto_id), 12)
 
+        historico = relatorios.relatorio_movimentacoes()
+        self.assertEqual(historico[0]["saldo_anterior"], 20)
+        self.assertEqual(historico[0]["saldo_atual"], 12)
+
     def test_saida_maior_que_saldo_da_erro(self):
         movimentacoes.registrar_entrada(self.produto_id, 5)
         with self.assertRaises(EstoqueInsuficienteError):
@@ -49,10 +53,15 @@ class TestEstoque(unittest.TestCase):
         with self.assertRaises(DadosInvalidosError):
             movimentacoes.registrar_entrada(self.produto_id, 1.5)
 
-    def test_nao_remove_produto_com_historico(self):
+    def test_inativa_produto_e_preserva_historico(self):
         movimentacoes.registrar_entrada(self.produto_id, 5)
-        with self.assertRaises(ProdutoComMovimentacaoError):
-            produtos.remover_produto(self.produto_id)
+        produtos.remover_produto(self.produto_id)
+
+        with self.assertRaises(ProdutoNaoEncontradoError):
+            produtos.buscar_produto(self.produto_id)
+
+        historico = relatorios.relatorio_movimentacoes()
+        self.assertEqual(len(historico), 1)
 
     def test_alerta_estoque_minimo(self):
         baixo = movimentacoes.produtos_estoque_baixo()
